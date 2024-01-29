@@ -22,7 +22,7 @@ const Form: Component = () => {
                 <input
                     type="number"
                     name="distance"
-                    class="input input-bordered"
+                    class="input input-bordered input-neutral"
                     value={distance()}
                     onInput={(e) => setDistance(e.currentTargetValue)}
                 />
@@ -32,7 +32,7 @@ const Form: Component = () => {
                 <input
                     type="number"
                     name="fuelUsed"
-                    class="input input-bordered"
+                    class="input input-bordered input-neutral"
                     value={fuelUsed()}
                     onInput={(e) => setFuelUsed(e.currentTargetValue)}
                 />
@@ -42,7 +42,7 @@ const Form: Component = () => {
                 <input
                     type="datetime-local"
                     name="refillDate"
-                    class="input input-bordered"
+                    class="input input-bordered input-neutral"
                     value={refillDate()}
                     onInput={(e) => setRefillDate(e.currentTargetValue)}
                 />
@@ -52,7 +52,7 @@ const Form: Component = () => {
                     type="submit"
                     class="btn btn-outline btn-wide btn-primary"
                 >
-                    Submit
+                    Add refueling
                 </button>
             </div>
         </form>

@@ -1,0 +1,3 @@
+.daisy-border-color {
+    border-color: var(--fallback-bc,oklch(var(--bc)/0.2))
+}
