@@ -18,10 +18,10 @@ const App: Component = () => {
     handleQueryChange(mediaQuery);
 
     return (
-        <main class="bg-base-300 min-h-screen p-2 flex flex-col">
+        <main class="bg-base-300 min-h-screen lg:h-screen p-2 flex flex-col">
             <span class="secondary">Mileage</span>
 
-            <div class="flex-1 grid grid-rows-2 lg:grid-cols-4 gap-2">
+            <div class="flex-1 grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-4 gap-2">
                 <div class="bg-base-200 p-4 rounded-box flex justify-center">
                     <LineChart />
                 </div>

@@ -1,5 +1,6 @@
 import { createEffect, createSignal } from "solid-js";
 import type { Component } from "solid-js";
+import { state, createRefueling } from "./../store/fuelUsageStore";
 
 const Form: Component = () => {
     const [distance, setDistance] = createSignal(0);
@@ -9,8 +10,8 @@ const Form: Component = () => {
 
     const addFuelRecord = (e: SubmitEvent) => {
         e.preventDefault();
-
-        console.log(e);
+        createRefueling(distance(), fuelUsed(), refillDate());
+        console.info(state);
     };
 
     createEffect(() => console.log(refillDate()));
@@ -24,7 +25,7 @@ const Form: Component = () => {
                     name="distance"
                     class="input input-bordered input-neutral"
                     value={distance()}
-                    onInput={(e) => setDistance(e.currentTargetValue)}
+                    onInput={(e) => setDistance(parseFloat(e.target.value))}
                 />
             </label>
             <label class="form-control w-full">
@@ -34,7 +35,7 @@ const Form: Component = () => {
                     name="fuelUsed"
                     class="input input-bordered input-neutral"
                     value={fuelUsed()}
-                    onInput={(e) => setFuelUsed(e.currentTargetValue)}
+                    onInput={(e) => setFuelUsed(parseFloat(e.target.value))}
                 />
             </label>
             <label class="form-control w-full">
@@ -44,7 +45,7 @@ const Form: Component = () => {
                     name="refillDate"
                     class="input input-bordered input-neutral"
                     value={refillDate()}
-                    onInput={(e) => setRefillDate(e.currentTargetValue)}
+                    onInput={(e) => setRefillDate(e.target.value)}
                 />
             </label>
             <div class="w-full pt-4 flex justify-center">
