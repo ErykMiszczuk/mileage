@@ -1,6 +1,10 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 import type { Component } from "solid-js";
-import { state, createRefueling } from "./../store/fuelUsageStore";
+import {
+    state,
+    createRefueling,
+    withSaveToLocalstore,
+} from "./../store/fuelUsageStore";
 
 const Form: Component = () => {
     const [distance, setDistance] = createSignal(0);
@@ -10,11 +14,11 @@ const Form: Component = () => {
 
     const addFuelRecord = (e: SubmitEvent) => {
         e.preventDefault();
-        createRefueling(distance(), fuelUsed(), refillDate());
+        withSaveToLocalstore(() =>
+            createRefueling(distance(), fuelUsed(), refillDate()),
+        );
         console.info(state);
     };
-
-    createEffect(() => console.log(refillDate()));
 
     return (
         <form class="flex-col flex-items-stretch" onSubmit={addFuelRecord}>

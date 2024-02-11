@@ -1,6 +1,9 @@
 import { createStore, produce } from "solid-js/store";
+import { toHashString } from "../helpers/hash";
+import localforage from "localforage";
 
 interface RefuelingRecord {
+    id: string;
     distance: number;
     fuelUsed: number;
     refuelingDate: string;
@@ -9,30 +12,6 @@ interface RefuelingRecord {
 interface RefuelingStore {
     data: RefuelingRecord[];
 }
-// interface RefuelingStore {
-//     data: RefuelingRecord[];
-//     createRefueling: (distance: number, fuel: number, date: Date) => void;
-//     deleteRefueling: () => void;
-//     updateRefueling: () => void;
-//     importCSV: () => void;
-//     exportCSV: () => void;
-// }
-
-// const useRefuelingDataStore = createWithSignal<RefuelingStore>(set => ({
-//     data: [],
-//     createRefueling: (distance: number, fuelUsed: number, refuelingDate: Date) => {
-//         const refuel: RefuelingRecord = {
-//             distance,
-//             fuelUsed,
-//             refuelingDate
-//         }
-//         set(state => ({ data: state.data.push(refuel)}))
-//     },
-//     deleteRefueling: () => {},
-//     updateRefueling: () => {},
-//     exportCSV: () => {},
-//     importCSV: () => {},
-// }))
 
 const [state, setState] = createStore<RefuelingStore>({
     data: [],
@@ -45,9 +24,66 @@ function createRefueling(
 ) {
     setState(
         produce((s) => {
-            s.data.push({ distance, fuelUsed, refuelingDate });
+            const id = toHashString(distance, fuelUsed, refuelingDate);
+            s.data.push({ distance, fuelUsed, refuelingDate, id });
         }),
     );
 }
 
-export { state, createRefueling };
+// biome-ignore lint: higher order function
+async function withSaveToLocalstore<F extends (...args: any[]) => any>(
+    func: F,
+) {
+    func();
+
+    try {
+        await localforage.setItem("refuelingRecords", state.data);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function init() {
+    let res: RefuelingRecord[];
+    try {
+        const data = await localforage.getItem("refuelingRecords");
+        if (data !== null && data !== undefined) res = data;
+    } catch (e) {
+        console.error(e);
+    }
+
+    console.log(res);
+}
+
+function exportToCSV() {
+    let res = "id,distance,fuel_used,refueling_date";
+    for (const record of state.data) {
+        res += `"${record.id}",`;
+        res += `"${record.distance}",`;
+        res += `"${record.fuelUsed}",`;
+        res += `"${record.refuelingDate}"`;
+        res += "\n";
+    }
+    return res;
+}
+
+function importFromCSV(doc: string) {
+    const splitDoc = doc.split("\n");
+    for (const line of splitDoc) {
+        const [_, rawDistance, rawFuelUsed, refuelingDate] = line.split(",");
+        createRefueling(
+            parseFloat(rawDistance),
+            parseFloat(rawFuelUsed),
+            refuelingDate,
+        );
+    }
+}
+
+export {
+    state,
+    init,
+    createRefueling,
+    exportToCSV,
+    importFromCSV,
+    withSaveToLocalstore,
+};
