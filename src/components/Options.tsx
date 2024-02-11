@@ -1,5 +1,6 @@
 import { Component } from "solid-js";
 import DeleteLocalDataModal from "./DeleteLocalDataModal";
+import ExportToCsv from "./ExportToCsv";
 
 const Options: Component = () => {
     return (
@@ -7,11 +8,7 @@ const Options: Component = () => {
             <summary class="m-1 btn">Options</summary>
             <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
                 <li>
-                    <input
-                        type="button"
-                        class="btn btn-ghost"
-                        value="Export to CSV"
-                    />
+                    <ExportToCsv />
                 </li>
                 <li>
                     <input

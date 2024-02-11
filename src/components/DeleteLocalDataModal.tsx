@@ -33,17 +33,17 @@ const DeleteLocalDataModal: Component = () => {
                         </form>
                         Do you want to delete local data?
                         <div class="modal-action">
-                            <input
+                            <button
                                 type="button"
                                 class="btn btn-ghost"
                                 value="Cancel"
                                 onClick={() => dialog!.showModal()}
                             />
-                            <input
+                            <button
                                 type="button"
                                 class="btn btn-error"
                                 value="Delete saved data"
-                                onClick={deleteLocalData}
+                                onClick={() => deleteLocalData()}
                             />
                         </div>
                     </div>
