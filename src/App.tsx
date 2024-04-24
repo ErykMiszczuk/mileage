@@ -10,6 +10,7 @@ import { Portal } from "solid-js/web";
 const App: Component = () => {
     const mediaQuery = window.matchMedia("(max-width: 768px)");
     const [showForm, setShowForm] = createSignal(true);
+
     function handleQueryChange(e: MediaQueryListEvent | MediaQueryList) {
         if (e.matches) {
             setShowForm(false);

@@ -1,6 +1,8 @@
-import type { Component } from "solid-js";
+import { For, onMount, type Component } from "solid-js";
+import { state } from "../store/fuelUsageStore";
 
 const Table: Component = () => {
+    onMount(() => console.log("Table mounted: ", state));
     return (
         <div class="flex justify-center">
             <table class="min-w-full shadow-md">
@@ -16,13 +18,19 @@ const Table: Component = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="border-b daisy-border-color">
-                        <th class="py-3 px-4">1</th>
-                        <td class="py-3 px-4">Today</td>
-                        <td class="py-3 px-4">420</td>
-                        <td class="py-3 px-4">35</td>
-                        <td class="py-3 px-4">12</td>
-                    </tr>
+                    <For each={state.data}>
+                        {(item, index) => (
+                            <tr class="border-b daisy-border-color">
+                                <th class="py-3 px-4">{index() + 1}</th>
+                                <td class="py-3 px-4">{item.refuelingDate}</td>
+                                <td class="py-3 px-4">{item.distance}</td>
+                                <td class="py-3 px-4">{item.fuelUsed}</td>
+                                <td class="py-3 px-4">
+                                    {(item.distance / item.fuelUsed).toFixed(2)}
+                                </td>
+                            </tr>
+                        )}
+                    </For>
                 </tbody>
             </table>
         </div>

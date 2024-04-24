@@ -44,16 +44,17 @@ async function withSaveToLocalstore<F extends (...args: any[]) => any>(
 }
 
 async function init() {
-    let res: RefuelingRecord[];
+    let res: RefuelingRecord[] = [];
     try {
         const data = await localforage.getItem("refuelingRecords");
         console.info("Init data", data);
-        if (data !== null && data !== undefined) res = data;
+        if (data !== null && data !== undefined)
+            res = data as RefuelingRecord[];
     } catch (e) {
         console.error(e);
     }
 
-    console.log(res);
+    setState({ data: res });
 }
 
 function exportToCSV() {

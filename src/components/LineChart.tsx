@@ -1,26 +1,52 @@
-import { type Component, onMount } from "solid-js";
+import { createEffect, createSignal, onMount } from "solid-js";
+import type { Component } from "solid-js";
 import Chart from "chart.js/auto";
+import { state } from "../store/fuelUsageStore";
 
 const LineChart: Component = () => {
     // biome-ignore lint: element ref
     let canvas: HTMLCanvasElement | undefined = undefined;
 
-    const labels = ["first", "second", "third"];
+    const [chart, setChart] = createSignal();
+    const initialLabels = state.data.map((_, idx) => idx + 1);
+    const initialValues = state.data.map((el) =>
+        (el.distance / el.fuelUsed).toFixed(2),
+    );
 
-    const data = {
-        labels: labels,
-        datasets: [
-            {
-                label: "Dataset 1",
-                data: [10, 17, 42],
-                borderColor: "rgb(54, 162, 235)",
-                backgroundColor: "rgba(54, 162, 235, 0.5)",
-            },
-        ],
-    };
+    createEffect(() => {
+        if (chart()) {
+            const labels = state.data.map((_, idx) => idx + 1);
+            const values = state.data.map((el) =>
+                (el.distance / el.fuelUsed).toFixed(2),
+            );
+
+            console.log("Chart instance ref: ", chart);
+            console.log("Chart instance ref: ", chart());
+            console.log("Values: ", values);
+            console.log("Labels: ", labels);
+            // biome-ignore lint: find proper type
+            (chart() as any).data.labels = labels;
+            // biome-ignore lint: find proper type
+            (chart() as any).data.datasets[0].data = values;
+            // biome-ignore lint: find proper type
+            (chart() as any).update();
+        }
+    });
 
     onMount(() => {
-        new Chart(canvas!, {
+        const data = {
+            labels: initialLabels,
+            datasets: [
+                {
+                    label: "Dataset 1",
+                    data: initialValues,
+                    borderColor: "rgb(54, 162, 235)",
+                    backgroundColor: "rgba(54, 162, 235, 0.5)",
+                },
+            ],
+        };
+
+        const chart = new Chart(canvas!, {
             type: "line",
             data: data,
             options: {
@@ -61,6 +87,7 @@ const LineChart: Component = () => {
                 },
             },
         });
+        setChart(chart);
     });
 
     return (
